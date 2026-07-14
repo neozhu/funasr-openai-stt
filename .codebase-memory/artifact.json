@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "8ba3e3580538ac089b18f9425989f51c42ab36f3",
+    "indexed_at": "2026-07-14T22:34:32Z",
+    "project": "D-github-funasr-openai-stt",
+    "nodes": 49,
+    "edges": 48,
+    "original_size": 1179648,
+    "compressed_size": 6582,
+    "compression_level": 9
+}
