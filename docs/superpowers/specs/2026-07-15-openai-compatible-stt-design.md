@@ -27,7 +27,7 @@ Routes are deliberately thin. Dependencies perform Bearer-key authentication and
 
 ## Deployment and Configuration
 
-Pydantic Settings is the sole configuration boundary. API keys have no production default and invalid/empty configuration prevents startup. The Docker image uses Python 3.11 slim, CPU-only PyTorch dependencies, ffmpeg, a non-root user, `/tmp` for transient data, and `/models` for persistent model caches. Compose mounts `/models` as a named volume and exposes the liveness health check.
+Pydantic Settings is the sole configuration boundary. API keys have no production default and invalid/empty configuration prevents startup. The Docker image uses Python 3.12 slim, CPU-only PyTorch dependencies, ffmpeg, a non-root user, `/tmp` for transient data, and `/models` for persistent model caches. Compose mounts `/models` as a named volume and exposes the liveness health check. Local development uses `python -m venv .venv` with `pip` and a pinned `requirements.txt`, rather than an `uv` workflow.
 
 ## Testing
 
@@ -35,7 +35,8 @@ Tests are FastAPI route tests only, using dependency and service overrides to av
 
 ## Constraints
 
-- Python 3.11, CPU-only runtime, one Uvicorn worker.
+- Python 3.12, CPU-only runtime, one Uvicorn worker.
+- Local setup uses `python` and a virtual environment; dependency versions are pinned in `requirements.txt`.
 - No database, CUDA, WebSockets, translations, diarization, or persistent uploaded audio.
 - No fake timestamps, no API-key/transcript/audio logging, and no broad recovery fallbacks.
 - Keep service boundaries direct and small; do not add dependencies beyond the specified stack.
