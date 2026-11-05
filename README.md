@@ -54,6 +54,14 @@ docker compose up --build
 
 The image runs as a non-root user, uses one Uvicorn worker, keeps transient audio under `/tmp`, and stores model downloads under `/models`.
 
+GitHub Actions runs lint, type checks, tests, and a Docker build for pull requests to `main`. Pushes to `main` and manual runs on `main` also publish the Linux AMD64 image to GHCR with only the `latest` tag:
+
+```bash
+docker pull ghcr.io/neozhu/funasr-openai-stt:latest
+```
+
+Publishing uses the built-in `GITHUB_TOKEN`; no additional registry secret is required. To allow anonymous pulls, set the package visibility to public in GitHub Packages after its first publication.
+
 ## Compatibility and operations
 
 `prompt` and `temperature` are accepted but ignored. Word timestamps, SRT/VTT, streaming, translations, and speaker diarization are not implemented. Model aliases (`whisper-1`, `gpt-4o-transcribe`, and `sensevoice`) all use SenseVoiceSmall.
