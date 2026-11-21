@@ -10,36 +10,8 @@ services:
       - .env
     ports:
       - "48733:8000"
-    volumes:
-      - funasr-models:/models
     tmpfs:
       - /tmp:size=1g,mode=1777
-    environment:
-      APP_NAME: ${APP_NAME:-FunASR Speech API}
-      APP_ENV: ${APP_ENV:-production}
-      APP_HOST: ${APP_HOST:-0.0.0.0}
-      APP_PORT: ${APP_PORT:-8000}
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      ASR_API_KEYS: ${ASR_API_KEYS:-}
-      ASR_MODEL_ID: ${ASR_MODEL_ID:-iic/SenseVoiceSmall}
-      ASR_MODEL_ALIAS: ${ASR_MODEL_ALIAS:-sensevoice}
-      ASR_DEVICE: ${ASR_DEVICE:-cpu}
-      ASR_LANGUAGE: ${ASR_LANGUAGE:-auto}
-      ASR_USE_ITN: ${ASR_USE_ITN:-true}
-      ASR_MAX_UPLOAD_MB: ${ASR_MAX_UPLOAD_MB:-25}
-      ASR_MAX_AUDIO_DURATION_SECONDS: ${ASR_MAX_AUDIO_DURATION_SECONDS:-3600}
-      ASR_MAX_CONCURRENT_REQUESTS: ${ASR_MAX_CONCURRENT_REQUESTS:-1}
-      ASR_QUEUE_TIMEOUT_SECONDS: ${ASR_QUEUE_TIMEOUT_SECONDS:-10}
-      ASR_INFERENCE_TIMEOUT_SECONDS: ${ASR_INFERENCE_TIMEOUT_SECONDS:-600}
-      ASR_CPU_THREADS: ${ASR_CPU_THREADS:-8}
-      OMP_NUM_THREADS: ${OMP_NUM_THREADS:-8}
-      MKL_NUM_THREADS: ${MKL_NUM_THREADS:-8}
-      ASR_TEMP_DIR: ${ASR_TEMP_DIR:-/tmp/funasr}
-      ASR_TEMP_FILE_MAX_AGE_MINUTES: ${ASR_TEMP_FILE_MAX_AGE_MINUTES:-60}
-      MODELSCOPE_CACHE: ${MODELSCOPE_CACHE:-/models/modelscope}
-      HF_HOME: ${HF_HOME:-/models/huggingface}
-      ASR_LOG_TRANSCRIPT: ${ASR_LOG_TRANSCRIPT:-false}
-      ASR_ENABLE_DOCS: ${ASR_ENABLE_DOCS:-true}
     healthcheck:
       test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8000/health/live"]
       interval: 30s
@@ -50,6 +22,3 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-
-volumes:
-  funasr-models:

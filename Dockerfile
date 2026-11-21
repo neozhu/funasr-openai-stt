@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM python:3.12-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -21,7 +22,35 @@ RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu 
 
 COPY app ./app
 
+RUN python - <<'PY'
+from modelscope.hub.snapshot_download import snapshot_download
+
+from app.config import Settings
+from app.services.asr import BUNDLED_MODELS_DIR
+
+model_id = Settings().asr_model_id
+snapshot_download(model_id, local_dir=str(BUNDLED_MODELS_DIR / model_id))
+snapshot_download(
+    "iic/speech_fsmn_vad_zh-cn-16k-common-pytorch",
+    local_dir=str(BUNDLED_MODELS_DIR / "fsmn-vad"),
+)
+PY
+
 USER appuser
+
+RUN --network=none python - <<'PY'
+import asyncio
+
+from app.config import Settings
+from app.services.asr import AsrService
+
+async def verify_models():
+    service = AsrService(Settings())
+    await service.load()
+    await service.warmup()
+
+asyncio.run(verify_models())
+PY
 
 EXPOSE 8000
 

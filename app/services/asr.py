@@ -14,6 +14,13 @@ import anyio
 
 from app.config import Settings
 
+BUNDLED_MODELS_DIR = Path("/opt/funasr-models")
+
+
+def _bundled_path_or_id(model_id: str) -> str:
+    bundled_path = BUNDLED_MODELS_DIR / model_id
+    return str(bundled_path) if bundled_path.is_dir() else model_id
+
 
 class ServiceBusyError(Exception):
     """Raised when no inference slot becomes available in time."""
@@ -71,8 +78,8 @@ class AsrService:
 
         torch.set_num_threads(self._settings.asr_cpu_threads)
         self._model = AutoModel(
-            model=self._settings.asr_model_id,
-            vad_model="fsmn-vad",
+            model=_bundled_path_or_id(self._settings.asr_model_id),
+            vad_model=_bundled_path_or_id("fsmn-vad"),
             vad_kwargs={"max_single_segment_time": 30_000},
             device="cpu",
             disable_update=True,

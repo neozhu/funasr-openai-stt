@@ -19,7 +19,7 @@ Set a real `ASR_API_KEYS` value in `.env`, then run:
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
 ```
 
-The first startup downloads SenseVoiceSmall into the configured model cache. In Docker Compose that cache is persisted in the `funasr-models` volume.
+Outside Docker, the first startup downloads SenseVoiceSmall and FSMN-VAD into the local model cache.
 
 ## API
 
@@ -52,7 +52,11 @@ cp .env.example .env
 docker compose up --build
 ```
 
-The image runs as a non-root user, uses one Uvicorn worker, keeps transient audio under `/tmp`, and stores model downloads under `/models`.
+Only `ASR_API_KEYS` is required in `.env`. Add optional settings there when you need to override the defaults.
+
+The image build downloads SenseVoiceSmall and FSMN-VAD from ModelScope into `/opt/funasr-models`, then loads and warms them up with networking disabled. The default models can load offline at container startup. If you set `ASR_MODEL_ID` to another model, FunASR can download it at startup. The downloaded cache lives in the container and is lost when the container is recreated.
+
+The image runs as a non-root user, uses one Uvicorn worker, and keeps transient audio under `/tmp`.
 
 GitHub Actions runs lint, type checks, tests, and a Docker build for pull requests to `main`. Pushes to `main` and manual runs on `main` also publish the Linux AMD64 image to GHCR with only the `latest` tag:
 
